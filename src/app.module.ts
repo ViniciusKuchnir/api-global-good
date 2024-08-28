@@ -1,9 +1,7 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { Module, OnModuleInit } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserTypeSeed } from './user-type-seed/user-type-seed';
-import { UserTypeSeedModule } from './user-type-seed/user-type-seed.module';
+import { UserTypeSeed } from './user-type-seed/entities/user-type-seed.entity';
+import { UserTypeSeedService } from './user-type-seed/user-type-seed.service';
 
 @Module({
   imports: [
@@ -14,13 +12,17 @@ import { UserTypeSeedModule } from './user-type-seed/user-type-seed.module';
       database: 'globalgood',
       username: 'root',
       password: 'bancodedados',
-      ssl: false,
-      synchronize: true,
       entities: [__dirname + '/**/*.entity{.js,.ts}'],
+      synchronize: true,
     }),
-    UserTypeSeedModule,
+    TypeOrmModule.forFeature([UserTypeSeed]),
   ],
-  controllers: [AppController],
-  providers: [AppService, UserTypeSeed],
+  providers: [UserTypeSeedService],
 })
-export class AppModule {}
+export class AppModule implements OnModuleInit {
+  constructor(private readonly userTypeSeedService: UserTypeSeedService) {}
+
+  async onModuleInit() {
+    await this.userTypeSeedService.seed();
+  }
+}

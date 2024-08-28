@@ -1,11 +1,25 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserTypeSeedDto } from './dto/create-user-type-seed.dto';
-import { UpdateUserTypeSeedDto } from './dto/update-user-type-seed.dto';
-
+import { InjectRepository } from '@nestjs/typeorm';
+import { UserTypeSeed } from './entities/user-type-seed.entity';
+import { Repository } from 'typeorm';
 @Injectable()
 export class UserTypeSeedService {
-  create(createUserTypeSeedDto: CreateUserTypeSeedDto) {
-    return 'This action adds a new userTypeSeed';
+  constructor(
+    @InjectRepository(UserTypeSeed)
+    private readonly userTypeRepository: Repository<UserTypeSeed>,
+  ) {}
+  async seed() {
+    const userTypes = [{ name: 'Company' }, { name: 'Customer' }];
+
+    for (const userType of userTypes) {
+      const exists = await this.userTypeRepository.findOne({
+        where: { name: userType.name },
+      });
+      if (!exists) {
+        const newUserType = this.userTypeRepository.create(userType);
+        await this.userTypeRepository.save(newUserType);
+      }
+    }
   }
 
   findAll() {
@@ -14,13 +28,5 @@ export class UserTypeSeedService {
 
   findOne(id: number) {
     return `This action returns a #${id} userTypeSeed`;
-  }
-
-  update(id: number, updateUserTypeSeedDto: UpdateUserTypeSeedDto) {
-    return `This action updates a #${id} userTypeSeed`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} userTypeSeed`;
   }
 }
