@@ -18,6 +18,7 @@ import { ValidationPipe } from 'src/validation.pipe';
 import { Response } from 'express';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from './entities/user.entity';
+import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 
 @Controller('users')
 @ApiTags('Users')
@@ -25,6 +26,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
+  @IsPublic()
   @ApiOperation({ summary: 'Create a new user' })
   @ApiBody({ type: CreateUserDto })
   @ApiResponse({

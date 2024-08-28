@@ -3,6 +3,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserTypeSeed } from './user-type-seed/entities/user-type-seed.entity';
 import { UserTypeSeedService } from './user-type-seed/user-type-seed.service';
 import { UsersModule } from './users/users.module';
+import { validate } from './env.validation';
+import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -16,10 +21,21 @@ import { UsersModule } from './users/users.module';
       entities: [__dirname + '/**/*.entity{.js,.ts}'],
       synchronize: true,
     }),
+    ConfigModule.forRoot({
+      validate,
+      isGlobal: true,
+    }),
     TypeOrmModule.forFeature([UserTypeSeed]),
     UsersModule,
+    AuthModule,
   ],
-  providers: [UserTypeSeedService],
+  providers: [
+    UserTypeSeedService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule implements OnModuleInit {
   constructor(private readonly userTypeSeedService: UserTypeSeedService) {}
