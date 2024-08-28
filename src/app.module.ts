@@ -2,6 +2,7 @@ import { Module, OnModuleInit } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserTypeSeed } from './user-type-seed/entities/user-type-seed.entity';
 import { UserTypeSeedService } from './user-type-seed/user-type-seed.service';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { UserTypeSeedService } from './user-type-seed/user-type-seed.service';
       synchronize: true,
     }),
     TypeOrmModule.forFeature([UserTypeSeed]),
+    UsersModule,
   ],
   providers: [UserTypeSeedService],
 })
