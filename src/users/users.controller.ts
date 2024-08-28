@@ -16,12 +16,30 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ValidationPipe } from 'src/validation.pipe';
 import { Response } from 'express';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { User } from './entities/user.entity';
 
 @Controller('users')
+@ApiTags('Users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create a new user' })
+  @ApiBody({ type: CreateUserDto })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'User successfully created',
+    type: User,
+  })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: 'User with existing email address',
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Internal server error',
+  })
   async create(
     @Body(new ValidationPipe()) createUserDto: CreateUserDto,
     @Res() response: Response,
