@@ -10,6 +10,7 @@ async function bootstrap() {
     .setTitle('GlobalGood API')
     .setDescription('The GlobalGood API description')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
