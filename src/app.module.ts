@@ -24,8 +24,8 @@ import { ProductsModule } from './products/products.module';
       synchronize: true,
     }),
     ConfigModule.forRoot({
-      validate,
       isGlobal: true,
+      validate,
     }),
     TypeOrmModule.forFeature([UserTypeSeed]),
     UsersModule,

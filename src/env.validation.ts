@@ -5,6 +5,9 @@ import { IsString, validateSync } from 'class-validator';
 class EnvironmentVariables {
   @IsString()
   JWT_SECRET: string;
+
+  @IsString()
+  SKU_GENERATOR_ALGORITHM: string;
 }
 
 export function validate(config: Record<string, unknown>) {
