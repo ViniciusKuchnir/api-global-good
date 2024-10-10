@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { plainToInstance } from 'class-transformer';
 import { IsString, validateSync } from 'class-validator';
 

@@ -13,8 +13,8 @@ import {
 
 @Entity({ name: 'users' })
 export class User {
-  @PrimaryGeneratedColumn('uuid')
-  @ApiProperty({ example: 'd290f1ee-6c54-4b01-90e6-d701748f0851' })
+  @PrimaryGeneratedColumn("uuid")
+  @ApiProperty({ example: "d290f1ee-6c54-4b01-90e6-d701748f0851" })
   id: string;
 
   @Column({ type: 'varchar', length: 60, nullable: false })

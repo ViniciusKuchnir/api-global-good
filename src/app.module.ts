@@ -10,18 +10,17 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { AuthModule } from './auth/auth.module';
 import { CategoriesModule } from './categories/categories.module';
 import { ProductsModule } from './products/products.module';
-
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
       port: 3306,
-      database: 'globalgood',
+      database: 'GLOBALGOOD',
       username: 'root',
-      password: 'bancodedados',
+      password: 'PUC@1234',
       entities: [__dirname + '/**/*.entity{.js,.ts}'],
-      synchronize: true,
+      synchronize: false,
     }),
     ConfigModule.forRoot({
       isGlobal: true,
