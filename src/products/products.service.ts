@@ -34,8 +34,8 @@ export class ProductsService {
     return await this.productRepo.save(product);
   }
 
-  findAll() {
-    return `This action returns all products`;
+  async findAll() {
+    return await this.productRepo.find({ relations: ['category'] }); // Inclui o relacionamento com a categoria
   }
 
   findOne(id: number) {
