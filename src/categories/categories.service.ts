@@ -25,8 +25,9 @@ export class CategoriesService {
     return await this.categoryRepo.save(category);
   }
 
-  findAll() {
-    return `This action returns all categories`;
+  // Método ajustado para retornar as categorias
+  async findAll() {
+    return await this.categoryRepo.find(); // Retorna todas as categorias em formato JSON
   }
 
   findOne(id: number) {
