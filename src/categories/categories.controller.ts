@@ -31,6 +31,7 @@ import { Category } from './entities/category.entity';
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
+  // Método para criar categoria
   @Post()
   @ApiOperation({ summary: 'Create a new category' })
   @ApiBody({ type: CreateCategoryDto })
@@ -68,25 +69,60 @@ export class CategoriesController {
     }
   }
 
+  // Método para listar todas as categorias
   @Get()
   findAll() {
     return this.categoriesService.findAll();
   }
 
+  // Método para buscar categoria por id
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.categoriesService.findOne(+id);
   }
 
+  // Método para atualizar categoria
   @Patch(':id')
-  update(
+  @ApiOperation({ summary: 'Update a category' })
+  @ApiBody({ type: UpdateCategoryDto })
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Category successfully updated',
+    type: Category,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Category not found',
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Internal server error',
+  })
+  async update(
     @Param('id') id: string,
-    @Body() updateCategoryDto: UpdateCategoryDto,
+    @Body(new ValidationPipe()) updateCategoryDto: UpdateCategoryDto,
+    @Res() response: Response,
   ) {
-    return this.categoriesService.update(+id, updateCategoryDto);
+    try {
+      const updatedCategory = await this.categoriesService.update(id, updateCategoryDto);
+      return response.status(HttpStatus.OK).send(updatedCategory);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
+  // Método para remover categoria
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete a category' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Category successfully deleted',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Category not found',
+  })
   remove(@Param('id') id: string) {
     return this.categoriesService.remove(+id);
   }

@@ -34,8 +34,27 @@ export class CategoriesService {
     return `This action returns a #${id} category`;
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
+  async update(id: string, updateCategoryDto: UpdateCategoryDto) {
+    // Verificar se a categoria existe
+    const category = await this.categoryRepo.findOneBy({ id });
+    if (!category) {
+      throw new ConflictException('Category not found');
+    }
+
+    // Verificar se o nome atualizado já existe para outra categoria
+    if (updateCategoryDto.name) {
+      const nameExists = await this.categoryRepo.findOneBy({
+        name: updateCategoryDto.name,
+      });
+
+      if (nameExists && nameExists.id !== id) {
+        throw new ConflictException('Another category with this name already exists');
+      }
+    }
+
+    // Atualizar a categoria com os novos valores
+    this.categoryRepo.merge(category, updateCategoryDto);
+    return await this.categoryRepo.save(category);
   }
 
   remove(id: number) {
